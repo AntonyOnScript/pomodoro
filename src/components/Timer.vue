@@ -2,20 +2,14 @@
 import { computed, reactive } from '@vue/reactivity'
 import { watch } from 'vue'
 import { secondsToMinutes } from 'date-fns'
-
-const props = defineProps<{
-    start: boolean
-}>()
+import { TimerState, MainState } from '@/types'
 
 const defaultTime = 15 * 60
 
-const emits = defineEmits<{
-    (e: 'timeZero', value: boolean): void
-}>()
-
-const state: { time: number, stopped: boolean } = reactive({
-    time: defaultTime,
-    stopped: true
+const props = defineProps<MainState>()
+const state = reactive<TimerState>({
+    time: 0,
+    stopped: false
 })
 
 const shownTimeValue = computed((): string => {
@@ -26,13 +20,16 @@ const shownTimeValue = computed((): string => {
         return `${state.time} seconds remaining`
     }
 })
-
 const mustRun = computed((): boolean => {
     if(props.start) return true
     return false
 })
 
-watch(mustRun, (value) => {
+const emits = defineEmits<{
+    (e: 'timeZero', value: boolean): void
+}>()
+
+watch(mustRun, (value): void => {
     if(value) {
         state.stopped = false
         runTiming()
@@ -41,7 +38,7 @@ watch(mustRun, (value) => {
     }
 })
 
-function runTiming() {
+function runTiming(): void {
     if (!state.stopped) {
         state.time--
         if(state.time === 0) {
@@ -54,7 +51,7 @@ function runTiming() {
     return
 }
 
-function stopTiming() {
+function stopTiming(): void {
     state.time = defaultTime
     state.stopped = true
 }

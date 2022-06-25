@@ -1,16 +1,22 @@
 <script setup lang="ts">
 import Timer from './Timer.vue'
 import { reactive} from 'vue'
+import { MainState } from '@/types'
 
-const state: { start: boolean } = reactive({
-    start: false
+const state: MainState = reactive({
+    start: false,
+    itsColdTime: false
 })
 
 </script>
 
 <template>
     <div>
-        <Timer :start="state.start" @timeZero="state.start = false" />
+        <Timer 
+            :start="state.start"
+            :itsColdTime="state.itsColdTime"
+            @timeZero="state.start = false" 
+        />
         <button @click="state.start = !state.start">{{ !state.start ? 'Start' : 'Stop' }} Pomodoro</button>
     </div>
 </template>
