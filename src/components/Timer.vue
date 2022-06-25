@@ -2,13 +2,16 @@
 import { computed, reactive } from '@vue/reactivity'
 import { watch } from 'vue'
 import { secondsToMinutes } from 'date-fns'
-import { TimerState, MainState } from '@/types'
+import { TimerState } from '@/types'
 
 const defaultTime = 15 * 60
 
-const props = defineProps<MainState>()
+const props = defineProps<{
+    start: boolean,
+    itsColdTime: boolean
+}>()
 const state = reactive<TimerState>({
-    time: 0,
+    time: defaultTime,
     stopped: false
 })
 
@@ -43,9 +46,9 @@ function runTiming(): void {
         state.time--
         if(state.time === 0) {
             emits('timeZero', true)
-            return
+            state.time = defaultTime
         }
-        setTimeout(runTiming, 1000)
+        setTimeout(runTiming, 10)
     }
 
     return
