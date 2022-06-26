@@ -4,27 +4,35 @@ import { watch } from 'vue'
 import { secondsToMinutes } from 'date-fns'
 import { TimerState } from '@/types'
 
-const defaultTime = 15 * 60
+const defaultTime = (15 * 60) + 10
 
 const props = defineProps<{
     start: boolean,
     itsColdTime: boolean
 }>()
+
 const state = reactive<TimerState>({
     time: defaultTime,
-    stopped: false
+    stopped: false,
+    itsColdTime: false
 })
 
 const shownTimeValue = computed((): string => {
     const minutes = secondsToMinutes(state.time)
-    if(minutes > 0) {
+    if (minutes > 0) {
         return `${minutes} minutes remaining`
     } else {
         return `${state.time} seconds remaining`
     }
 })
+
 const mustRun = computed((): boolean => {
-    if(props.start) return true
+    if (props.start) return true
+    return false
+})
+
+const isItColdTime = computed((): boolean => {
+    if (props.itsColdTime) return true
     return false
 })
 
@@ -33,7 +41,7 @@ const emits = defineEmits<{
 }>()
 
 watch(mustRun, (value): void => {
-    if(value) {
+    if (value) {
         state.stopped = false
         runTiming()
     } else {
@@ -41,10 +49,15 @@ watch(mustRun, (value): void => {
     }
 })
 
+watch(isItColdTime, (value): void => {
+    state.itsColdTime = value
+    state.time = defaultTime
+})
+
 function runTiming(): void {
     if (!state.stopped) {
         state.time--
-        if(state.time === 0) {
+        if (state.time === 0) {
             emits('timeZero', true)
             state.time = defaultTime
         }
@@ -60,7 +73,7 @@ function stopTiming(): void {
 }
 </script>
 
-<template>
+<template class="timer">
     <div v-if="props.start">
         {{ shownTimeValue }}    
     </div>
@@ -68,3 +81,11 @@ function stopTiming(): void {
         click start pomodoro to start the count down.
     </div>
 </template>
+
+<style scoped>
+    .timer {
+        font-size: 2rem;
+        font-weight: 600;
+        text-transform: capitalize;
+    }
+</style>

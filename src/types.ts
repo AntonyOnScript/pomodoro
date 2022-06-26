@@ -5,5 +5,6 @@ export interface MainState {
 
 export interface TimerState {
     time: number,
-    stopped: boolean
+    stopped: boolean,
+    itsColdTime: boolean
 }

@@ -75,7 +75,6 @@ function handleButtonAction(): void {
             :loop="true"
         />
         <Timer 
-            class="timer"
             :start="state.start"
             :itsColdTime="state.itsColdTime"
             @timeZero="handleChangeTimeColdness()" 
@@ -90,11 +89,3 @@ function handleButtonAction(): void {
         </q-btn>
     </div>
 </template>
-
-<style scoped>
-    .timer {
-        font-size: 2rem;
-        font-weight: 600;
-        text-transform: capitalize;
-    }
-</style>
