@@ -2,13 +2,16 @@
 import Timer from './Timer.vue'
 import { reactive, computed , ref } from 'vue'
 import { MainState } from '@/types'
+import type { Ref } from 'vue'
 import CrazyApple from '@/assets/lottie/crazy-apple.json'
+import ChangeStateSong from '@/assets/audio/change_state.mp3'
 
 interface ButtonState {
     color: string,
     text: string
 }
 
+const notification: Ref<HTMLAudioElement | null> = ref(null)
 const appleAnimation = ref()
 
 const state: MainState = reactive({
@@ -37,6 +40,7 @@ const buttonState = computed<ButtonState>(() => {
 })
 
 function handleChangeTimeColdness(): void {
+    notification.value.play()
     if (!state.itsColdTime) {
         appleAnimation.value.pause()
     } else {
@@ -47,6 +51,7 @@ function handleChangeTimeColdness(): void {
 }
 
 function handleButtonAction(): void {
+    notification.value.play()
     if (!state.start) {
         appleAnimation.value.play()
         state.start = true
@@ -87,5 +92,6 @@ function handleButtonAction(): void {
         >
             {{ buttonState.text }}
         </q-btn>
+        <audio ref="notification" :src="ChangeStateSong" type="audio/mp3"></audio>
     </div>
 </template>
