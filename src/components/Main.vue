@@ -40,7 +40,7 @@ const buttonState = computed<ButtonState>(() => {
 })
 
 function handleChangeTimeColdness(): void {
-    notification.value.play()
+    notification.value?.play()
     if (!state.itsColdTime) {
         appleAnimation.value.pause()
     } else {
@@ -51,7 +51,7 @@ function handleChangeTimeColdness(): void {
 }
 
 function handleButtonAction(): void {
-    notification.value.play()
+    notification.value?.play()
     if (!state.start) {
         appleAnimation.value.play()
         state.start = true
