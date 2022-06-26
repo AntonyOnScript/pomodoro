@@ -4,7 +4,8 @@ import { watch } from 'vue'
 import { secondsToMinutes } from 'date-fns'
 import { TimerState } from '@/types'
 
-const defaultTime = (15 * 60) + 10
+const defaultTime = (25 * 60)
+const restTime = (5 * 60)
 
 const props = defineProps<{
     start: boolean,
@@ -51,7 +52,11 @@ watch(mustRun, (value): void => {
 
 watch(isItColdTime, (value): void => {
     state.itsColdTime = value
-    state.time = defaultTime
+    if (value) {
+        state.time = restTime
+    } else {
+        state.time = defaultTime
+    }
 })
 
 function runTiming(): void {
@@ -61,7 +66,7 @@ function runTiming(): void {
             emits('timeZero', true)
             state.time = defaultTime
         }
-        setTimeout(runTiming, 10)
+        setTimeout(runTiming, 1000)
     }
 
     return
