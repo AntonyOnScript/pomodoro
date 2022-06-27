@@ -1,0 +1,31 @@
+name: AWS S3 Deploy
+on: 
+  push: 
+    branches:
+      - 'master'
+jobs: 
+  setup-aws-cli:
+    name: 'Deploying'
+    runs-on: 'ubuntu-latest'
+    steps:
+    - name: setup checkout
+      uses: actions/checkout@v3
+
+    - name: install aws
+      run: |
+        echo ${{ secrets.key_id }}
+        sudo apt install awscli -y
+
+    - name: logging into AWS
+      run: |
+        aws configure set aws_access_key_id ${{ secrets.key_id }}
+        aws configure set aws_secret_access_key ${{ secrets.secret_key }}
+        aws configure set default.region us-east-1
+
+    - name: Build project
+      run: yarn && yarn build
+
+    - name: deploying to s3
+      run: |
+        ls
+        aws s3 mv dist s3://${{ secrets.bucket_name }}/ --recursive
